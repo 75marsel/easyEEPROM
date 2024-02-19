@@ -7,7 +7,7 @@
   modify it under the terms of the GNU General Public License
   as published by the Free Software Foundation; either version 3
   of the License, or (at your option) any later version.
-  
+
   EASY EEPROM LIBARY 
   Name: easyEEPROM.cpp
   Type: Source file
@@ -28,14 +28,13 @@
   @param data the char array that will be stored to the EEPROM.
   @return None
 */
-void EasyEEPROM::updateEEPROM_char(char* data)
+void EasyEEPROM::update_char(char* data, int length)
 {
-  int l = strlen(data);
-  for(int i = 0; i < l; i++) {
+  for(int i = 0; i < length; i++) {
     byte p = (byte) data[i];
     EEPROM.update(_ADDRESS_OFFSET + i, p);
   }
-  EEPROM.update(_ADDRESS_OFFSET + l + 1, '\0');
+  EEPROM.update(_ADDRESS_OFFSET + length + 1, '\0');
 }
 
 /**
@@ -45,7 +44,7 @@ void EasyEEPROM::updateEEPROM_char(char* data)
   @param length the length of the char array to be stored.
   @return None
 */
-void EasyEEPROM::readEEPROM_char(char* data, int length) {
+void EasyEEPROM::read_char(char* data, int length) {
   for(int i = 0; i < length; i++) {
     char p = (char) EEPROM.read(i);
 
@@ -64,7 +63,7 @@ void EasyEEPROM::readEEPROM_char(char* data, int length) {
   @return true if the result of checking is same.
   @return false if the result of checking is otherwise different.
 */
-bool EasyEEPROM::isSameEEPROM_char(char* data, int length) {
+bool EasyEEPROM::isSame_char(char* data, int length) {
   char temp[length];
 
   for(int i = 0; i < length; i++)
@@ -79,7 +78,7 @@ bool EasyEEPROM::isSameEEPROM_char(char* data, int length) {
 }
 
 // Clears the EEPROM with 0 value
-void EasyEEPROM::clearEEPROM() {
+void EasyEEPROM::clear() {
   for(int i = 0; i < EEPROM.length(); i++) {
     EEPROM.update(i, 0);
   }
@@ -89,6 +88,6 @@ void EasyEEPROM::clearEEPROM() {
  Returns the length of the EEPROM (value in bytes)
  @return (int) the length of eeprom.
 */
-int EasyEEPROM::getLengthEEPROM() {
+int EasyEEPROM::getLength() {
   return EEPROM.length();
 }

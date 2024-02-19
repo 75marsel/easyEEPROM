@@ -26,11 +26,11 @@
 class EasyEEPROM
 {
   public:
-    void updateEEPROM_char(char* data);
-    void readEEPROM_char(char* data, int length);
-    bool isSameEEPROM_char(char* data, int length);
-    void clearEEPROM();
-    int getLengthEEPROM();
+    void update_char(char* data, int length);
+    void read_char(char* data, int length);
+    bool isSame_char(char* data, int length);
+    void clear();
+    int getLength();
   private:
     int _ADDRESS_OFFSET = 0x00;
 };
