@@ -1,6 +1,3 @@
-:repository-owner: 75marsel
-:repository-name: easyEEPROM
-
 # easyEEPROM Library 
 
 A Custom Library that is able to store, update, clear char array in the eeprom of arduino microcontroller.
