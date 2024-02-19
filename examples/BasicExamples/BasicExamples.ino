@@ -14,7 +14,7 @@ void setup() {
   eeprom.update_char(sample, CHAR_ARRAY_SIZE);
 
   // reads and store the EEPROM (that is based on the given length) to the new_sample char array
-  eeprom.readchar(new_sample, CHAR_ARRAY_SIZE);
+  eeprom.read_char(new_sample, CHAR_ARRAY_SIZE);
 
   // prints the new_sample
   Serial.println(new_sample);
