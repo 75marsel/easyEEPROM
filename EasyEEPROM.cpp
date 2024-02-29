@@ -13,8 +13,8 @@
   Type: Source file
 
   @author Gappi, Jeric Marcel L.
-  @version 1.19022024
-
+  @version 2.29022024
+  GITHUB: https://github.com/75marsel/easyEEPROM
 */
 
 
@@ -26,27 +26,30 @@
   Updates the EEPROM with the given char array.
 
   @param data the char array that will be stored to the EEPROM.
+  @param start_index the index position where we will fetch the starting character
+  @param end_index the index position where we will fetch the last character
   @return None
 */
-void EasyEEPROM::update_char(char* data, int length)
+void EasyEEPROM::update_char(char* data, int start_index, int end_index)
 {
-  for(int i = 0; i < length; i++) {
+  for(int i, = 0, ei = start_index; ei < end_index; i++, ei++) {
     byte p = (byte) data[i];
-    EEPROM.update(_ADDRESS_OFFSET + i, p);
+    EEPROM.update(_ADDRESS_OFFSET + ei, p);
   }
-  EEPROM.update(_ADDRESS_OFFSET + length + 1, '\0');
+  EEPROM.update(_ADDRESS_OFFSET + end_index, '\0');
 }
 
 /**
   Stores the EEPROM data with the given char array and length.
 
   @param data the char array that will be stored to the EEPROM.
-  @param length the length of the char array to be stored.
+  @param start_index the index position where we will fetch the starting character
+  @param end_index the index position where we will fetch the last character
   @return None
 */
-void EasyEEPROM::read_char(char* data, int length) {
-  for(int i = 0; i < length; i++) {
-    char p = (char) EEPROM.read(i);
+void EasyEEPROM::read_char(char* data, int start_index, int end_index) {
+  for(int i = 0, ei = start_index; ei < end_index; i++, ei++) {
+    char p = (char) EEPROM.read(ei);
 
     if(p == '\0')
       break;
@@ -63,11 +66,12 @@ void EasyEEPROM::read_char(char* data, int length) {
   @return true if the result of checking is same.
   @return false if the result of checking is otherwise different.
 */
-bool EasyEEPROM::isSame_char(char* data, int length) {
+bool EasyEEPROM::isSame_char(char* data, int start_index, int end_index) {
+  int length = strlen(data);
   char temp[length];
 
-  for(int i = 0; i < length; i++)
-    temp[i] = EEPROM.read(i);
+  for(int i = 0, ei = start_index; ei < end_index; i++, ei++)
+    temp[i] = (char) EEPROM.read(ei);
   
   temp[length] = '\0';
 

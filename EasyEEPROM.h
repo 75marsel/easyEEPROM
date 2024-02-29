@@ -13,8 +13,8 @@
   Type: Header file
 
   @author Gappi, Jeric Marcel L.
-  @version 1.19022024
-
+  @version 2.29022024
+  GITHUB: https://github.com/75marsel/easyEEPROM
 */
 
 
@@ -26,9 +26,9 @@
 class EasyEEPROM
 {
   public:
-    void update_char(char* data, int length);
-    void read_char(char* data, int length);
-    bool isSame_char(char* data, int length);
+    void update_char(char* data, int start_index, int end_index);
+    void read_char(char* data, int start_index, int end_index);
+    bool isSame_char(char* data, int start_index, int end_index);
     void clear();
     int getLength();
   private:
