@@ -32,7 +32,7 @@
 */
 void EasyEEPROM::update_char(char* data, int start_index, int end_index)
 {
-  for(int i, = 0, ei = start_index; ei < end_index; i++, ei++) {
+  for(int i = 0, ei = start_index; ei < end_index; i++, ei++) {
     byte p = (byte) data[i];
     EEPROM.update(_ADDRESS_OFFSET + ei, p);
   }

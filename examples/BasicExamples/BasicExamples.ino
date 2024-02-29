@@ -19,7 +19,6 @@
 #include <EasyEEPROM.h>
 
 #define CHAR_ARRAY_SIZE 13
-#define 
 
 char number1[CHAR_ARRAY_SIZE] = "+639059918742";
 char number2[CHAR_ARRAY_SIZE] = "+639059918999";
@@ -52,13 +51,13 @@ void setup() {
   eeprom.update_char(number2, CHAR_ARRAY_SIZE, CHAR_ARRAY_SIZE*2);
 
   // same procedure at number2
-  eeprom.update_char(number3, 0, CHAR_ARRAY_SIZE*2, CHAR_ARRAY_SIZE*3);
+  eeprom.update_char(number3, CHAR_ARRAY_SIZE*2, CHAR_ARRAY_SIZE*3);
 
   // same procedure at number2
-  eeprom.update_char(number4, 0, CHAR_ARRAY_SIZE*3, CHAR_ARRAY_SIZE*4);
+  eeprom.update_char(number4, CHAR_ARRAY_SIZE*3, CHAR_ARRAY_SIZE*4);
 
   // same procedure at number2
-  eeprom.update_char(number5, 0, CHAR_ARRAY_SIZE*4, CHAR_ARRAY_SIZE*5);
+  eeprom.update_char(number5, CHAR_ARRAY_SIZE*4, CHAR_ARRAY_SIZE*5);
 
   // READ EEPROM EXAMPLE
 
@@ -83,7 +82,7 @@ void setup() {
 
   // saves the resut in a bool variable
   // paramter: char array to check, start index of searching, end index of searching
-  bool checkSame = isSame_char(n4, CHAR_ARRAY_SIZE*3, CHAR_ARRAY_SIZE*4);
+  bool checkSame = eeprom.isSame_char(number4, CHAR_ARRAY_SIZE*3, CHAR_ARRAY_SIZE*4);
   if(checkSame) {
     Serial.println("SAME!");
   }
