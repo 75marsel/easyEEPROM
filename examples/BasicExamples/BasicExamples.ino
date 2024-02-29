@@ -48,26 +48,26 @@ void setup() {
   // FORMULA: CHAR_ARRAY_SIZE*n  where n is the nth place (pang-ilan si number)
   // we do CHAR_ARRAY_SIZE*n as we add the length of array (current index) plus the length of the array (actual data to store)
   // where n is the rank (nth place) of the char array
-  eeprom.update_char(number2, CHAR_ARRAY_SIZE, CHAR_ARRAY_SIZE*2);
+  eeprom.update_char(number2, CHAR_ARRAY_SIZE+1, CHAR_ARRAY_SIZE*2);
 
   // same procedure at number2
-  eeprom.update_char(number3, CHAR_ARRAY_SIZE*2, CHAR_ARRAY_SIZE*3);
+  eeprom.update_char(number3, CHAR_ARRAY_SIZE*2+1, CHAR_ARRAY_SIZE*3);
 
   // same procedure at number2
-  eeprom.update_char(number4, CHAR_ARRAY_SIZE*3, CHAR_ARRAY_SIZE*4);
+  eeprom.update_char(number4, CHAR_ARRAY_SIZE*3+1, CHAR_ARRAY_SIZE*4);
 
   // same procedure at number2
-  eeprom.update_char(number5, CHAR_ARRAY_SIZE*4, CHAR_ARRAY_SIZE*5);
+  eeprom.update_char(number5, CHAR_ARRAY_SIZE*4+1, CHAR_ARRAY_SIZE*5);
 
   // READ EEPROM EXAMPLE
 
   // pass the sample char array and updates the new_sample with that value that is being read at the eeprom
   // paramters: char array for storing the eeprom values, starting index in eeprom, desired end index at eeprom
   eeprom.read_char(empty_num1, 0, CHAR_ARRAY_SIZE);
-  eeprom.read_char(empty_num2, CHAR_ARRAY_SIZE, CHAR_ARRAY_SIZE*2);
-  eeprom.read_char(empty_num3, CHAR_ARRAY_SIZE*2, CHAR_ARRAY_SIZE*3);
-  eeprom.read_char(empty_num4, CHAR_ARRAY_SIZE*3, CHAR_ARRAY_SIZE*4);
-  eeprom.read_char(empty_num5, CHAR_ARRAY_SIZE*4, CHAR_ARRAY_SIZE*5);
+  eeprom.read_char(empty_num2, CHAR_ARRAY_SIZE+1, CHAR_ARRAY_SIZE*2);
+  eeprom.read_char(empty_num3, CHAR_ARRAY_SIZE*2+1, CHAR_ARRAY_SIZE*3);
+  eeprom.read_char(empty_num4, CHAR_ARRAY_SIZE*3+1, CHAR_ARRAY_SIZE*4);
+  eeprom.read_char(empty_num5, CHAR_ARRAY_SIZE*4+1, CHAR_ARRAY_SIZE*5);
 
   Serial.print("NUM 1: ");
   Serial.println(empty_num1);
@@ -82,7 +82,7 @@ void setup() {
 
   // saves the resut in a bool variable
   // paramter: char array to check, start index of searching, end index of searching
-  bool checkSame = eeprom.isSame_char(number4, CHAR_ARRAY_SIZE*3, CHAR_ARRAY_SIZE*4);
+  bool checkSame = eeprom.isSame_char(number4, CHAR_ARRAY_SIZE*3+1, CHAR_ARRAY_SIZE*4);
   if(checkSame) {
     Serial.println("SAME!");
   }
