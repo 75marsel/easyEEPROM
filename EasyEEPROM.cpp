@@ -13,7 +13,7 @@
   Type: Source file
 
   @author Gappi, Jeric Marcel L.
-  @version 2.29022024
+  @version 2.29022024 hotfix
   GITHUB: https://github.com/75marsel/easyEEPROM
 */
 
@@ -32,11 +32,13 @@
 */
 void EasyEEPROM::update_char(char* data, int start_index, int end_index)
 {
-  for(int i = 0, ei = start_index; ei < end_index; i++, ei++) {
+  for(int i = 0, ei = start_index; ei <= end_index; i++, ei++) {
     byte p = (byte) data[i];
-    EEPROM.update(_ADDRESS_OFFSET + ei, p);
+    //Serial.print("Current Letter: ");
+    //Serial.println(data[i]);
+    EEPROM.write(_ADDRESS_OFFSET + ei, p);
   }
-  EEPROM.update(_ADDRESS_OFFSET + end_index, '\0');
+  EEPROM.write(_ADDRESS_OFFSET + end_index + 1, '\0');
 }
 
 /**
@@ -48,15 +50,15 @@ void EasyEEPROM::update_char(char* data, int start_index, int end_index)
   @return None
 */
 void EasyEEPROM::read_char(char* data, int start_index, int end_index) {
-  for(int i = 0, ei = start_index; ei < end_index; i++, ei++) {
-    char p = (char) EEPROM.read(ei);
+  int length = end_index - start_index + 1;
 
-    if(p == '\0')
-      break;
-    
-    data[i] = p;
+  for (int i = 0, ei = start_index; i < length; i++, ei++) {
+    data[i] = EEPROM.read(_ADDRESS_OFFSET + ei);
   }
+
+  data[length] = '\0';  // Ensure null terminator at the end of the data array
 }
+
 
 /**
   Checks if the given char array is same with the char array stored in the EEPROM
@@ -67,14 +69,15 @@ void EasyEEPROM::read_char(char* data, int start_index, int end_index) {
   @return false if the result of checking is otherwise different.
 */
 bool EasyEEPROM::isSame_char(char* data, int start_index, int end_index) {
-  int length = strlen(data);
+  int length = 14;
   char temp[length];
 
-  for(int i = 0, ei = start_index; ei < end_index; i++, ei++)
+  for(int i = 0, ei = start_index; i < length; i++, ei++)
     temp[i] = (char) EEPROM.read(ei);
   
   temp[length] = '\0';
-
+  Serial.print("received: ");
+  Serial.println(temp);
   if(strcmp(temp, data) == 0)
     return true;
   
@@ -86,6 +89,7 @@ void EasyEEPROM::clear() {
   for(int i = 0; i < EEPROM.length(); i++) {
     EEPROM.update(i, 0);
   }
+  Serial.println("EEPROM CLEARED!");
 }
 
 /**

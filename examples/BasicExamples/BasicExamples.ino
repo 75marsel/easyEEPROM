@@ -12,7 +12,7 @@
   GITHUB: https://github.com/75marsel/easyEEPROM
 
   @author Gappi, Jeric Marcel L.
-  @version 2.29022024
+  @version 2.29022024 hotfix
 
 */
 
@@ -20,17 +20,18 @@
 
 #define CHAR_ARRAY_SIZE 13
 
+
 char number1[CHAR_ARRAY_SIZE] = "+639059918742";
 char number2[CHAR_ARRAY_SIZE] = "+639059918999";
 char number3[CHAR_ARRAY_SIZE] = "+639059918777";
 char number4[CHAR_ARRAY_SIZE] = "+639059918888";
 char number5[CHAR_ARRAY_SIZE] = "+639059918111";
 
-char empty_num1[CHAR_ARRAY_SIZE];
-char empty_num2[CHAR_ARRAY_SIZE];
-char empty_num3[CHAR_ARRAY_SIZE];
-char empty_num4[CHAR_ARRAY_SIZE];
-char empty_num5[CHAR_ARRAY_SIZE];
+char empty_num1[CHAR_ARRAY_SIZE + 1]; // + 1 for null terminator
+char empty_num2[CHAR_ARRAY_SIZE + 1];
+char empty_num3[CHAR_ARRAY_SIZE + 1];
+char empty_num4[CHAR_ARRAY_SIZE + 1];
+char empty_num5[CHAR_ARRAY_SIZE + 1];
 
 
 EasyEEPROM eeprom; // create an instance of EasyEEPROM as eeprom
@@ -38,37 +39,36 @@ EasyEEPROM eeprom; // create an instance of EasyEEPROM as eeprom
 
 void setup() {
   Serial.begin(9600);
-
   // sample use case
 
   // store number1, number2, number3 to eeprom
   // PARAMETERS: array, starting index in eeprom, length of the array (end index in eeprom)
-  eeprom.update_char(number1, 0, CHAR_ARRAY_SIZE);
+  eeprom.update_char(number1, 0, CHAR_ARRAY_SIZE - 1);
 
   // FORMULA: CHAR_ARRAY_SIZE*n  where n is the nth place (pang-ilan si number)
   // we do CHAR_ARRAY_SIZE*n as we add the length of array (current index) plus the length of the array (actual data to store)
   // where n is the rank (nth place) of the char array
-  eeprom.update_char(number2, CHAR_ARRAY_SIZE+1, CHAR_ARRAY_SIZE*2);
+  eeprom.update_char(number2, CHAR_ARRAY_SIZE , CHAR_ARRAY_SIZE*2 - 1);
 
   // same procedure at number2
-  eeprom.update_char(number3, CHAR_ARRAY_SIZE*2+1, CHAR_ARRAY_SIZE*3);
+  eeprom.update_char(number3, CHAR_ARRAY_SIZE*2, CHAR_ARRAY_SIZE*3 - 1);
 
   // same procedure at number2
-  eeprom.update_char(number4, CHAR_ARRAY_SIZE*3+1, CHAR_ARRAY_SIZE*4);
+  eeprom.update_char(number4, CHAR_ARRAY_SIZE*3, CHAR_ARRAY_SIZE*4 - 1);
 
   // same procedure at number2
-  eeprom.update_char(number5, CHAR_ARRAY_SIZE*4+1, CHAR_ARRAY_SIZE*5);
+  eeprom.update_char(number5, CHAR_ARRAY_SIZE*4, CHAR_ARRAY_SIZE*5 - 1);
 
   // READ EEPROM EXAMPLE
 
   // pass the sample char array and updates the new_sample with that value that is being read at the eeprom
   // paramters: char array for storing the eeprom values, starting index in eeprom, desired end index at eeprom
-  eeprom.read_char(empty_num1, 0, CHAR_ARRAY_SIZE);
-  eeprom.read_char(empty_num2, CHAR_ARRAY_SIZE+1, CHAR_ARRAY_SIZE*2);
-  eeprom.read_char(empty_num3, CHAR_ARRAY_SIZE*2+1, CHAR_ARRAY_SIZE*3);
-  eeprom.read_char(empty_num4, CHAR_ARRAY_SIZE*3+1, CHAR_ARRAY_SIZE*4);
-  eeprom.read_char(empty_num5, CHAR_ARRAY_SIZE*4+1, CHAR_ARRAY_SIZE*5);
-
+  eeprom.read_char(empty_num1, 0, CHAR_ARRAY_SIZE - 1); // minus one before the '+' of another number
+  eeprom.read_char(empty_num2, CHAR_ARRAY_SIZE, CHAR_ARRAY_SIZE*2 - 1);
+  eeprom.read_char(empty_num3, CHAR_ARRAY_SIZE*2, CHAR_ARRAY_SIZE*3 - 1);
+  eeprom.read_char(empty_num4, CHAR_ARRAY_SIZE*3, CHAR_ARRAY_SIZE*4 - 1);
+  eeprom.read_char(empty_num5, CHAR_ARRAY_SIZE*4, CHAR_ARRAY_SIZE*5 - 1);
+  Serial.println();
   Serial.print("NUM 1: ");
   Serial.println(empty_num1);
   Serial.print("NUM 2: ");
@@ -80,15 +80,9 @@ void setup() {
   Serial.print("NUM 5: ");
   Serial.println(empty_num5);
 
-  // saves the resut in a bool variable
-  // paramter: char array to check, start index of searching, end index of searching
-  bool checkSame = eeprom.isSame_char(number4, CHAR_ARRAY_SIZE*3+1, CHAR_ARRAY_SIZE*4);
-  if(checkSame) {
-    Serial.println("SAME!");
-  }
-  else {
-    Serial.println("NOT SAME!");
-  }
+  bool isSame = eeprom.isSame_char(empty_num5, CHAR_ARRAY_SIZE*4, CHAR_ARRAY_SIZE*5 - 1);
+  Serial.print("Is same?: ");
+  Serial.println(isSame);
 }
 
 void loop() {
