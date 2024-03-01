@@ -100,10 +100,13 @@ void EasyEEPROM::clearExceptAdmin() {
 
 // Clears the EEPROM with 0 value
 void EasyEEPROM::clearAtIndex(int start_index) {
-  for(int i = start_index; i < start_index + 14; i++) {
+  for(int i = start_index; i < start_index + 13; i++) {
     EEPROM.update(i, 0);
   }
-  Serial.println("EEPROM CLEARED! EXCEPT ADMIN!");
+  Serial.print("EEPROM Cleared at index: ");
+  Serial.print(start_index);
+  Serial.print(" to index: ");
+  Serial.println(start_index+13);
 }
 
 /**
