@@ -68,7 +68,7 @@ void EasyEEPROM::read_char(char* data, int start_index, int end_index) {
   @return true if the result of checking is same.
   @return false if the result of checking is otherwise different.
 */
-bool EasyEEPROM::isSame_char(char* data, int start_index, int end_index) {
+bool EasyEEPROM::isSame_char(char* data, int start_index) {
   int length = 14;
   char temp[length];
 
@@ -76,8 +76,6 @@ bool EasyEEPROM::isSame_char(char* data, int start_index, int end_index) {
     temp[i] = (char) EEPROM.read(ei);
   
   temp[length] = '\0';
-  Serial.print("received: ");
-  Serial.println(temp);
   if(strcmp(temp, data) == 0)
     return true;
   
@@ -85,11 +83,27 @@ bool EasyEEPROM::isSame_char(char* data, int start_index, int end_index) {
 }
 
 // Clears the EEPROM with 0 value
-void EasyEEPROM::clear() {
+void EasyEEPROM::clearAll() {
   for(int i = 0; i < EEPROM.length(); i++) {
     EEPROM.update(i, 0);
   }
   Serial.println("EEPROM CLEARED!");
+}
+
+// Clears the EEPROM with 0 value
+void EasyEEPROM::clearExceptAdmin() {
+  for(int i = 13; i < EEPROM.length(); i++) {
+    EEPROM.update(i, 0);
+  }
+  Serial.println("EEPROM CLEARED! EXCEPT ADMIN!");
+}
+
+// Clears the EEPROM with 0 value
+void EasyEEPROM::clearAtIndex(int start_index) {
+  for(int i = start_index; i < start_index + 14; i++) {
+    EEPROM.update(i, 0);
+  }
+  Serial.println("EEPROM CLEARED! EXCEPT ADMIN!");
 }
 
 /**
@@ -98,4 +112,13 @@ void EasyEEPROM::clear() {
 */
 int EasyEEPROM::getLength() {
   return EEPROM.length();
+}
+
+// Helper function to print EEPROM content
+void EasyEEPROM::showAllContents() {
+  for(int i = 0; i < EEPROM.length(); i++) {
+    Serial.print(EEPROM.read(i));
+    Serial.print(" ");
+  }
+  Serial.println();
 }

@@ -28,9 +28,11 @@ class EasyEEPROM
   public:
     void update_char(char* data, int start_index, int end_index);
     void read_char(char* data, int start_index, int end_index);
-    bool isSame_char(char* data, int start_index, int end_index);
-    void copyCharArray(const char* source, char* destination, size_t arrayLength); 
-    void clear();
+    bool isSame_char(char* data, int start_index);
+    void clearAll();
+    void clearExceptAdmin();
+    void clearAtIndex(int start_index);
+    void showAllContents();
     int getLength();
   private:
     int _ADDRESS_OFFSET = 0x00;

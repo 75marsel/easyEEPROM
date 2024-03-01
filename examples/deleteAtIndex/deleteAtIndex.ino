@@ -35,7 +35,6 @@
 #define NUMBER5_START_INDEX CHAR_ARRAY_SIZE*4
 #define NUMBER5_END_INDEX CHAR_ARRAY_SIZE*5 - 1
 
-
 char number1[CHAR_ARRAY_SIZE] = "+639059918742";
 char number2[CHAR_ARRAY_SIZE] = "+639059918999";
 char number3[CHAR_ARRAY_SIZE] = "+639059918777";
@@ -59,30 +58,36 @@ void setup() {
   // store number1, number2, number3 to eeprom
   // PARAMETERS: array, starting index in eeprom, length of the array (end index in eeprom)
   eeprom.update_char(number1, NUMBER1_START_INDEX, NUMBER1_END_INDEX);
-
-  // FORMULA: CHAR_ARRAY_SIZE*n  where n is the nth place (pang-ilan si number)
-  // we do CHAR_ARRAY_SIZE*n as we add the length of array (current index) plus the length of the array (actual data to store)
-  // where n is the rank (nth place) of the char array
   eeprom.update_char(number2, NUMBER2_START_INDEX, NUMBER2_END_INDEX);
-
-  // same procedure at number2
   eeprom.update_char(number3, NUMBER3_START_INDEX, NUMBER3_END_INDEX);
-
-  // same procedure at number2
   eeprom.update_char(number4, NUMBER4_START_INDEX, NUMBER4_END_INDEX);
-
-  // same procedure at number2
   eeprom.update_char(number5, NUMBER5_START_INDEX, NUMBER5_END_INDEX);
 
-  // READ EEPROM EXAMPLE
+  readAndPrint();
+
+  // attempt try to clear
+  // we clear at index 13 where it is the start of the index of number 2 in eeprom
+  eeprom.clearAtIndex(CHAR_ARRAY_SIZE); 
+  // check again
+  readAndPrint();
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+}
+
+void readAndPrint() {
+    // READ EEPROM EXAMPLE
 
   // pass the sample char array and updates the new_sample with that value that is being read at the eeprom
   // paramters: char array for storing the eeprom values, starting index in eeprom, desired end index at eeprom
-  eeprom.read_char(empty_num1, NUMBER1_START_INDEX, NUMBER1_END_INDEX); // minus one before the '+' of another number
-  eeprom.read_char(empty_num2, NUMBER2_START_INDEX, NUMBER2_END_INDEX);
+  eeprom.read_char(empty_num1, NUMBER1_START_INDEX, NUMBER1_END_INDEX);
+  eeprom.read_char(empty_num2, NUMBER2_START_INDEX , NUMBER2_END_INDEX);
   eeprom.read_char(empty_num3, NUMBER3_START_INDEX, NUMBER3_END_INDEX);
   eeprom.read_char(empty_num4, NUMBER4_START_INDEX, NUMBER4_END_INDEX);
   eeprom.read_char(empty_num5, NUMBER5_START_INDEX, NUMBER5_END_INDEX);
+
   Serial.println();
   Serial.print("NUM 1: ");
   Serial.println(empty_num1);
@@ -94,17 +99,7 @@ void setup() {
   Serial.println(empty_num4);
   Serial.print("NUM 5: ");
   Serial.println(empty_num5);
-
-  bool isSame = eeprom.isSame_char(empty_num5, NUMBER5_START_INDEX);
-  Serial.print("Is same?: ");
-  Serial.println(isSame);
 }
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
-}
-
 
 /**
  * HOW EEPROM WORKS
