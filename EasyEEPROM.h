@@ -13,7 +13,7 @@
   Type: Header file
 
   @author Gappi, Jeric Marcel L.
-  @version 2.29022024 hotfix
+  @version 3 abstraction
   GITHUB: https://github.com/75marsel/easyEEPROM
 */
 
@@ -26,13 +26,15 @@
 class EasyEEPROM
 {
   public:
-    void update_char(char* data, int start_index, int end_index);
-    void read_char(char* data, int start_index, int end_index);
-    bool isSame_char(char* data, int start_index);
+    void addAdmin(char* data);
+    bool checkAdmin();
+    void addPhoneNumber(char* data, int position);
+    void readPhoneNumber(char* data, int position);
+    bool deletePhoneNumber(int position);
+    bool checkIfExist(char* data, int position);
     void clearAll();
     void clearExceptAdmin();
-    void clearAtIndex(int start_index);
-    void showAllContents();
+    void showAllNumbers();
     int getLength();
   private:
     int _ADDRESS_OFFSET = 0x00;

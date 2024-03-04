@@ -13,7 +13,7 @@
   Type: Source file
 
   @author Gappi, Jeric Marcel L.
-  @version 2.29022024 hotfix
+  @version 3 abstraction
   GITHUB: https://github.com/75marsel/easyEEPROM
 */
 
@@ -30,35 +30,162 @@
   @param end_index the index position where we will fetch the last character
   @return None
 */
-void EasyEEPROM::update_char(char* data, int start_index, int end_index)
+void EasyEEPROM::addAdmin(char* data)
 {
-  for(int i = 0, ei = start_index; ei <= end_index; i++, ei++) {
+  for(int i = 0; i <= 12; i++) {
     byte p = (byte) data[i];
     //Serial.print("Current Letter: ");
     //Serial.println(data[i]);
-    EEPROM.write(_ADDRESS_OFFSET + ei, p);
+    EEPROM.update(_ADDRESS_OFFSET + i, p);
   }
-  EEPROM.write(_ADDRESS_OFFSET + end_index + 1, '\0');
+  EEPROM.update(_ADDRESS_OFFSET + 12 + 1, '\0');
 }
 
-/**
-  Stores the EEPROM data with the given char array and length.
+/*
+bool EasyEEPROM::removeAdmin(char* data)
+{
+  
+  char first_char = (char) EEPROM.read(0);
+  if(first_char != "+")
+    return false;
 
-  @param data the char array that will be stored to the EEPROM.
-  @param start_index the index position where we will fetch the starting character
-  @param end_index the index position where we will fetch the last character
-  @return None
-*/
-void EasyEEPROM::read_char(char* data, int start_index, int end_index) {
-  int length = end_index - start_index + 1;
+  for(int i = 0; i <= 13; i++) {
+    EEPROM.update(_ADDRESS_OFFSET + i, 0);
+  }
 
-  for (int i = 0, ei = start_index; i < length; i++, ei++) {
-    data[i] = EEPROM.read(_ADDRESS_OFFSET + ei);
+  return true;
+  
+  for(int i = 0; i < EEPROM.length(); i++) {
+    EEPROM.update(i, 0);
+  }
+  Serial.println("EEPROM CLEARED!");
+}*/
+
+bool EasyEEPROM::checkAdmin()
+{
+  char first_char = (char) EEPROM.read(0);
+  if(first_char != '+')
+    return false;
+
+  for(int i = 0; i <= 12; i++) {
+    char c = (char) EEPROM.read(i);
+    if (!isDigit(c)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// 14 start + 12 + 1 null
+void EasyEEPROM::addPhoneNumber(char* data, int position) {
+  int start = 14;
+  int end = 27;
+
+  switch(position) {
+    case 0:
+      start = 0;
+      end = 13; // 26 default then later + 1 for null
+    break;
+    case 1:
+      start = 14;
+      end = 27; // 26 default then later + 1 for null
+    break;
+    case 2:
+      start = 28;
+      end = 41;
+    break;
+    case 3:
+      start = 42;
+      end = 55;
+    break;
+    case 4:
+      start = 56;
+      end = 69;
+    break;
+    default:
+      return;
+  } 
+
+  for(int i = 0, ei = start; ei < end; i++, ei++) {
+    byte p = (byte) data[i];
+    EEPROM.update(_ADDRESS_OFFSET + ei, p);
+  }
+  EEPROM.update(_ADDRESS_OFFSET + end, '\0');
+}
+
+// 14 start + 12 + 1 null
+bool EasyEEPROM::deletePhoneNumber(int position) {
+  int start = 14;
+  int end = 27;
+
+  switch(position) {
+    case 1:
+      start = 14;
+      end = 27; // 26 default then later + 1 for null
+      break;
+    case 2:
+      start = 28;
+      end = 41;
+      break;
+    case 3:
+      start = 42;
+      end = 55;
+      break;
+    case 4:
+      start = 56;
+      end = 69;
+      break;
+    default:
+      return false;
+  } 
+
+  char first_char = (char) EEPROM.read(start);
+  
+  if(first_char != '+')
+    return false;
+
+  for(int i = start; i <= end; i++) {
+    EEPROM.update(_ADDRESS_OFFSET + i, 0);
+  }
+
+  return true;
+}
+
+void EasyEEPROM::readPhoneNumber(char* data, int position) {
+  int start = 14;
+
+  switch(position) {
+    case 0:
+      start = 0;
+      break;
+    case 1:
+      start = 14;
+      break;
+    case 2:
+      start = 28;
+      break;
+    case 3:
+      start = 42;
+      break;
+    case 4:
+      start = 56;
+      break;
+    default:
+      return;
+  }
+
+  int length = 14;
+
+  for (int i = 0, ei = start; i < 13; i++, ei++) {
+    data[i] = (char) EEPROM.read(_ADDRESS_OFFSET + ei);
+    //Serial.print("current char: ");
+    //Serial.println( (char) EEPROM.read(_ADDRESS_OFFSET + ei));
   }
 
   data[length] = '\0';  // Ensure null terminator at the end of the data array
-}
 
+}
 
 /**
   Checks if the given char array is same with the char array stored in the EEPROM
@@ -68,19 +195,44 @@ void EasyEEPROM::read_char(char* data, int start_index, int end_index) {
   @return true if the result of checking is same.
   @return false if the result of checking is otherwise different.
 */
-bool EasyEEPROM::isSame_char(char* data, int start_index) {
-  int length = 14;
-  char temp[length];
+bool EasyEEPROM::checkIfExist(char* data, int position) {
+  int start = 0;
 
-  for(int i = 0, ei = start_index; i < length; i++, ei++)
+  switch(position) {
+    case 0:
+      start = 0;
+      break;
+    case 1:
+      start = 14;
+      break;
+    case 2:
+      start = 28;
+      break;
+    case 3:
+      start = 42;
+      break;
+    case 4:
+      start = 56;
+      break;
+    default:
+      return false;
+  }
+
+  int length = 14;
+  char temp[length + 1];  // Increase the size of temp array by 1
+
+  for(int i = 0, ei = start; i < length; i++, ei++) {
     temp[i] = (char) EEPROM.read(ei);
-  
+  }
+
   temp[length] = '\0';
-  if(strcmp(temp, data) == 0)
+  if(strcmp(temp, data) == 0) {
     return true;
-  
+  }
+
   return false;
 }
+
 
 // Clears the EEPROM with 0 value
 void EasyEEPROM::clearAll() {
@@ -92,21 +244,10 @@ void EasyEEPROM::clearAll() {
 
 // Clears the EEPROM with 0 value
 void EasyEEPROM::clearExceptAdmin() {
-  for(int i = 13; i < EEPROM.length(); i++) {
+  for(int i = 14; i < EEPROM.length(); i++) {
     EEPROM.update(i, 0);
   }
   Serial.println("EEPROM CLEARED! EXCEPT ADMIN!");
-}
-
-// Clears the EEPROM with 0 value
-void EasyEEPROM::clearAtIndex(int start_index) {
-  for(int i = start_index; i < start_index + 13; i++) {
-    EEPROM.update(i, 0);
-  }
-  Serial.print("EEPROM Cleared at index: ");
-  Serial.print(start_index);
-  Serial.print(" to index: ");
-  Serial.println(start_index+13);
 }
 
 /**
@@ -118,10 +259,15 @@ int EasyEEPROM::getLength() {
 }
 
 // Helper function to print EEPROM content
-void EasyEEPROM::showAllContents() {
-  for(int i = 0; i < EEPROM.length(); i++) {
-    Serial.print(EEPROM.read(i));
-    Serial.print(" ");
+void EasyEEPROM::showAllNumbers() {
+  for(int i = 0; i <= 69; i++) {
+    char c = (char) EEPROM.read(i);
+    if(c == '\0'){
+      Serial.println();
+    }
+    else {
+      Serial.print(c);
+    }
   }
   Serial.println();
 }
